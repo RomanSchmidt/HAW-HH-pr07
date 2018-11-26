@@ -5,15 +5,14 @@ class Logic
   attr_reader(:blacks, :whites)
 
   def initialize
-    @match = nil
-    @whites = 0
-    @blacks = 0
+    start_new_match(nil)
   end
 
   def start_new_match(match)
     @match = match
     @whites = 0
     @blacks = 0
+    @tips = []
   end
 
   def analyze_guess(guess)
@@ -33,6 +32,20 @@ class Logic
 
   def guess_correct?
     @match.class::SYMBOL_NUMBER == @blacks || @match.class::MAX_ROUND == @match.guess_results
+  end
+
+  def get_tip
+    @tips = [] if @tips.size == @match.class::SYMBOLS.size
+    begin
+      random_symbol = @match.class::SYMBOLS.sample
+    end while @tips.include? random_symbol
+    @tips.push(random_symbol)
+
+    found_counter = 0
+    @match.code.each do |code|
+      found_counter += 1 if code == random_symbol
+    end
+    {symbol: random_symbol, times: found_counter}
   end
 
   private

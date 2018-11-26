@@ -10,6 +10,14 @@ class Renderer
     draw_error('Entered value not valid! Please enter between ' + valid_range.first.to_s + ' and ' + valid_range.last.to_s + '!')
   end
 
+  def draw_offer_tip
+    draw_input('Want tip? (0 = no | 1 = yes)')
+  end
+
+  def draw_tip(tip)
+    draw_box("The Symbol #{tip[:symbol]}, exists #{tip[:times]} time(s).")
+  end
+
   def draw_single_guess(no, symbols)
     draw_box('Guess #' + no.to_s + ' ' + symbols_to_s(symbols))
   end

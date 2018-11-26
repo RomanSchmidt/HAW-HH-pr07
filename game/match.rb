@@ -45,6 +45,7 @@ class Match
     choose_code_breaker if @players[APlayer::CODE_BREAKER].nil?
 
     @logic.start_new_match(self)
+
     match_finished = false
 
     @code = @players[APlayer::CODE_MAKER].get_code
@@ -59,14 +60,24 @@ class Match
   private
 
   def next_round
+    offer_tip
     guess = @players[APlayer::CODE_BREAKER].get_guess
     @logic.analyze_guess(guess)
     @guess_results.push({:guess => guess, :whites => @logic.whites, :blacks => @logic.blacks, :guesses => guess_no})
     @players[APlayer::CODE_BREAKER].increase_won_times if @logic.guess_correct?
+    nil
   end
 
   def get_player(player_type)
     player_type_chosen = @input.get_player_type
     player_type_chosen == 0 ? Human.new(player_type, @input, @renderer, self) : Artifactual.new(player_type, @input, @renderer, self)
+  end
+
+  def offer_tip
+    @renderer.draw_offer_tip
+    if @input.get_want_tip?
+      @renderer.draw_tip(@logic.get_tip)
+    end
+    nil
   end
 end

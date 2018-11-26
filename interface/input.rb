@@ -11,6 +11,11 @@ class Input
     get_valid_int(valid_range) == 0 ? false : true
   end
 
+  def get_want_tip?
+    valid_range = 0..1
+    get_valid_int(valid_range) == 0 ? false : true
+  end
+
   def get_player_type
     valid_range = 1..2
     entry = get_valid_int(valid_range)

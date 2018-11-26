@@ -7,6 +7,7 @@ class Human
 
   def get_code
     i = 0
+    @symbols_to_guess = []
     begin
       @renderer.draw_enter_code(Match::SYMBOLS, i +=1)
       @symbols_to_guess.push(@input.get_symbol(Match::SYMBOLS))
