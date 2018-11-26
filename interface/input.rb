@@ -1,6 +1,8 @@
 require 'scanf'
 
-# todo renderer with error
+# Author: Roman Schmidt, Daniel Osterholz
+#
+# Handle all user input
 class Input
   def initialize(renderer)
     @renderer = renderer
@@ -46,6 +48,7 @@ class Input
     begin
       entry = gets.chop.to_i
     rescue Exception => e
+      # for the case the cli had a ctrl + c on input e.g.
       exit(1)
     end
     entry

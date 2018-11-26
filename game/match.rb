@@ -5,6 +5,9 @@ require './player/human'
 require './player/artifactual'
 require './game/logic'
 
+# Author: Roman Schmidt, Daniel Osterholz
+#
+# This class holds the mail loop for a match.
 class Match
   SYMBOLS = %w['a' 'b' 'c' 'd' 'e' 'f']
   SYMBOL_NUMBER = 4
@@ -12,11 +15,11 @@ class Match
 
   attr_reader(:code, :guess_results, :players)
 
-  def initialize(renderer, input, logic)
+  def initialize(renderer, input)
     @players = {APlayer::CODE_MAKER => nil, APlayer::CODE_BREAKER => nil}
     @renderer = renderer
     @input = input
-    @logic = logic
+    @logic = Logic.new(self)
     @code = []
     @guess_results = []
   end
@@ -27,16 +30,17 @@ class Match
 
   def choose_code_maker
     @renderer.draw_choose_code_maker
-    @players[APlayer::CODE_MAKER] = get_player(APlayer::CODE_MAKER)
+    @players[APlayer::CODE_MAKER] = get_player
     self
   end
 
   def choose_code_breaker
     @renderer.draw_choose_code_breaker
-    @players[APlayer::CODE_BREAKER] = get_player(APlayer::CODE_BREAKER)
+    @players[APlayer::CODE_BREAKER] = get_player
     self
   end
 
+  # on a new match reinitialize and redo match start logic
   def start_new
     @guess_results = []
     @code = []
@@ -44,7 +48,7 @@ class Match
     choose_code_maker if @players[APlayer::CODE_MAKER].nil?
     choose_code_breaker if @players[APlayer::CODE_BREAKER].nil?
 
-    @logic.start_new_match(self)
+    @logic = Logic.new(self)
 
     match_finished = false
 
@@ -59,6 +63,7 @@ class Match
 
   private
 
+  # each round offer tip, get guess, analyse, save current step, figure out if won
   def next_round
     offer_tip
     guess = @players[APlayer::CODE_BREAKER].get_guess
@@ -68,11 +73,12 @@ class Match
     nil
   end
 
-  def get_player(player_type)
+  def get_player
     player_type_chosen = @input.get_player_type
-    player_type_chosen == 0 ? Human.new(player_type, @input, @renderer, self) : Artifactual.new(player_type, @input, @renderer, self)
+    player_type_chosen == 0 ? Human.new(@input, @renderer, self) : Artifactual.new(@input, @renderer, self)
   end
 
+  # tips just for humans
   def offer_tip
     return unless @players[APlayer::CODE_BREAKER].is_a? Human
     @renderer.draw_offer_tip

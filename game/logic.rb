@@ -1,20 +1,22 @@
 require './game/match'
 
+# Author: Roman Schmidt, Daniel Osterholz
+#
+# Own central class to hold the logic for this game.
 class Logic
 
   attr_reader(:blacks, :whites)
 
-  def initialize
-    start_new_match(nil)
-  end
-
-  def start_new_match(match)
+  def initialize(match)
     @match = match
     @whites = 0
     @blacks = 0
     @tips = []
   end
 
+  # get whites and blacks from guess depending on @match
+  # no whites for black positions
+  # no whites several times for a symbol which is guessed more then one times
   def analyze_guess(guess)
     @whites = 0
     @blacks = 0
@@ -31,9 +33,10 @@ class Logic
   end
 
   def guess_correct?
-    @match.class::SYMBOL_NUMBER == @blacks || @match.class::MAX_ROUND == @match.guess_results
+    @match.class::SYMBOL_NUMBER == @blacks
   end
 
+  # each tip just one time as long we didn't reach the limit of guesses. else reset guesses
   def get_tip
     @tips = [] if @tips.size == @match.class::SYMBOLS.size
     begin
@@ -50,6 +53,7 @@ class Logic
 
   private
 
+  # give just one time a white for a symbol on a wrong position. even it is more then one time there
   def is_white?(codes, element, ignore_pos, symbols_to_ignore)
     return false if symbols_to_ignore.include?(element)
     codes.each_with_index do |code_element, key|
@@ -63,6 +67,7 @@ class Logic
     false
   end
 
+  # check if its a black one and remove from the collection
   def is_black?(codes, element, own_pos)
     if element == codes[own_pos]
       codes[own_pos] = nil

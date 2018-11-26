@@ -1,14 +1,15 @@
 require './interface/renderer'
 require './interface/input'
-require './game/logic'
 require './game/match'
 
+# Author: Roman Schmidt, Daniel Osterholz
+#
+# Create required classes, loop each Game if required, print exit in the end
 class Mastermind
   def initialize
     @renderer = Renderer.new
     @input = Input.new(@renderer)
-    @logic = Logic.new
-    @match = Match.new(@renderer, @input, @logic)
+    @match = Match.new(@renderer, @input)
 
     start
   end
@@ -24,7 +25,7 @@ class Mastermind
   end
 
   def stop
-    @renderer.draw_bye(@match.guess_results)
+    @renderer.draw_bye
     exit(0)
   end
 end

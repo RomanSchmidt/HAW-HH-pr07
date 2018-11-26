@@ -1,3 +1,6 @@
+# Author: Roman Schmidt, Daniel Osterholz
+#
+# Class to handle all outputs
 class Renderer
   private
 
@@ -36,8 +39,7 @@ class Renderer
     draw_line('Welcome to Mastermind!')
   end
 
-  # todo draw summery as table
-  def draw_bye(guess_results)
+  def draw_bye
     cls
     draw_line('CU!')
   end

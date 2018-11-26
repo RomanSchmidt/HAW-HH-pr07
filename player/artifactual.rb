@@ -1,10 +1,13 @@
 require './player/a_player'
 
+# Author: Roman Schmidt, Daniel Osterholz
+#
+# ai logic here
 class Artifactual
   include APlayer
 
-  def initialize(type, input, renderer, match)
-    super(type, input, renderer, match)
+  def initialize(input, renderer, match)
+    super(input, renderer, match)
     @size = Match::SYMBOLS.length
   end
 

@@ -1,6 +1,9 @@
 require './interface/input'
 require './interface/renderer'
 
+# Author: Roman Schmidt, Daniel Osterholz
+#
+# Abstract to share logic between every player types
 module APlayer
   CODE_MAKER = :codeMaker
   CODE_BREAKER = :codeBreaker
@@ -8,9 +11,7 @@ module APlayer
   attr_reader(:won_times)
 
   # todo check
-  def initialize(type, input, renderer, match)
-    # eg APlayer::CODE_MAKER
-    @type = type
+  def initialize(input, renderer, match)
     @symbols_to_guess = []
     @input = input
     @renderer = renderer
@@ -22,7 +23,8 @@ module APlayer
     @won_times += 1
   end
 
-  def get_code; end
+  def get_code
+  end
 
   def get_guess
     guess = []

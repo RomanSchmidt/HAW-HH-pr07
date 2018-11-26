@@ -2,6 +2,9 @@ require './player/a_player'
 require './interface/input'
 require './interface/renderer'
 
+# Author: Roman Schmidt, Daniel Osterholz
+#
+# Get data from the input class instance
 class Human
   include APlayer
 
