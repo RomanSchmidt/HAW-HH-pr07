@@ -64,8 +64,8 @@ class Renderer
           [
               '#',
               (key + 1).to_s,
-              ' -> [',
-              guess_result[:guess].join(':'),
+              ' [',
+              guess_result[:guess].join(' '),
               '] (whites: ',
               guess_result[:whites].to_s,
               '; blacks: ',
@@ -74,7 +74,7 @@ class Renderer
           ].join('')
       )
     end
-    draw_table_footer(match_finished ? "Won #{match.players[APlayer::CODE_BREAKER].won_times} time(s)! (#{code.join(':')})" : nil)
+    draw_table_footer(match_finished ? "Won #{match.players[APlayer::CODE_BREAKER].won_times} time(s)! (#{code.join(' ')})" : nil)
   end
 
   def cls
@@ -106,7 +106,8 @@ class Renderer
 
   def draw_box(value)
     draw_table_header
-    printf("%1$s %2$-#{Renderer::OUTPUT_LENGTH - 6}s %1$5s\n", '║', value.to_s)
+    delta = get_colored_value_length_delta(value)
+    printf("%1$s %2$-#{Renderer::OUTPUT_LENGTH - 6 + delta}s %1$5s\n", '║', value.to_s)
     draw_table_footer
   end
 
@@ -120,7 +121,7 @@ class Renderer
   def draw_table_footer(footer = '')
     cleaned_footer = (footer.is_a? String) ? footer.strip : ''
     cleaned_footer = ' ' + cleaned_footer + ' ' if cleaned_footer.size > 0
-    line_length = calculate_line_length(cleaned_footer)
+    line_length = calculate_line_length(cleaned_footer) + (get_colored_value_length_delta(cleaned_footer) / 2)
     printf("╚%1$s%2$s%3$s╝\n", '═' * line_length.ceil, cleaned_footer, '═' * line_length.floor)
   end
 
@@ -131,7 +132,14 @@ class Renderer
   end
 
   def draw_table_element(element)
-    printf("%1$s %2$-#{Renderer::OUTPUT_LENGTH - 6}s %1$5s\n", '║', element.to_s)
+    delta = get_colored_value_length_delta(element)
+    printf("%1$s %2$-#{Renderer::OUTPUT_LENGTH - 6 + delta}s %1$5s\n", '║', element.to_s)
+  end
+
+  def get_colored_value_length_delta(value)
+    length_with_color = value.to_s.length
+    length_without_color = value.to_s.gsub(/\e\[(\d+)(;\d+)*m/, '').length
+    length_with_color - length_without_color
   end
 
   def draw_line(value)

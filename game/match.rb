@@ -9,7 +9,7 @@ require './game/logic'
 #
 # This class holds the mail loop for a match.
 class Match
-  SYMBOLS = %w['a' 'b' 'c' 'd' 'e' 'f']
+  SYMBOLS = ["\033[1;31;41m \033[0m", "\033[1;32;42m \033[0m", "\033[1;33;43m \033[0m", "\033[1;34;44m \033[0m", "\033[1;35;45m \033[0m", "\033[1;36;46m \033[0m"]
   SYMBOL_NUMBER = 4
   MAX_ROUND = 10
 
