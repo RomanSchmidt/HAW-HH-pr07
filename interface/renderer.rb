@@ -11,11 +11,13 @@ class Renderer
   end
 
   def draw_offer_tip
+    cls
     draw_input('Want tip? (0 = no | 1 = yes)')
   end
 
   def draw_tip(tip)
     draw_box("The Symbol #{tip[:symbol]}, exists #{tip[:times]} time(s).")
+    cls
   end
 
   def draw_single_guess(no, symbols)

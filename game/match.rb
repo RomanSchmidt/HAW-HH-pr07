@@ -74,6 +74,7 @@ class Match
   end
 
   def offer_tip
+    return unless @players[APlayer::CODE_BREAKER].is_a? Human
     @renderer.draw_offer_tip
     if @input.get_want_tip?
       @renderer.draw_tip(@logic.get_tip)
