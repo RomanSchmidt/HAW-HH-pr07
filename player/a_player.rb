@@ -10,12 +10,15 @@ module APlayer
 
   attr_reader(:won_times)
 
-  # todo check
-  def initialize(input, renderer, match)
+  def initialize(type, input, renderer)
+    raise(ArgumentError, 'type is not valid') unless (type == APlayer::CODE_MAKER || type == APlayer::CODE_BREAKER)
+    raise(ArgumentError, 'input is not valid') unless input.is_a? Input
+    raise(ArgumentError, 'renderer is not valid') unless renderer.is_a? Renderer
+
+    @type = type
     @symbols_to_guess = []
     @input = input
     @renderer = renderer
-    @match = match
     @won_times = 0
   end
 
@@ -27,16 +30,11 @@ module APlayer
   end
 
   def get_guess
-    guess = []
-    i = 0
-    begin
-      guess.push(get_single_guess(i = i + 1))
-    end while guess.size < Match::SYMBOL_NUMBER
-    guess
   end
 
-  protected
+  def analyse_last_guess(last_guess, whites, blacks)
+  end
 
-  def get_single_guess(no)
+  def new_round
   end
 end

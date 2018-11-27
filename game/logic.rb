@@ -8,6 +8,7 @@ class Logic
   attr_reader(:blacks, :whites)
 
   def initialize(match)
+    raise(ArgumentError, 'match not an instance of Match') unless match.is_a? Match
     @match = match
     @whites = 0
     @blacks = 0
@@ -18,6 +19,7 @@ class Logic
   # no whites for black positions
   # no whites several times for a symbol which is guessed more then one times
   def analyze_guess(guess)
+    raise(ArgumentError, 'guess is not an array') unless guess.is_a? Array
     @whites = 0
     @blacks = 0
     codes = @match.code.clone
@@ -29,7 +31,7 @@ class Logic
         end
       end
     end
-    self
+    nil
   end
 
   def guess_correct?
@@ -55,6 +57,11 @@ class Logic
 
   # give just one time a white for a symbol on a wrong position. even it is more then one time there
   def is_white?(codes, element, ignore_pos, symbols_to_ignore)
+    raise(ArgumentError, 'codes is not an array') unless codes.is_a?(Array)
+    raise(ArgumentError, 'element invalid') unless @match.class::SYMBOLS.include?(element)
+    raise(ArgumentError, 'ignore_pos invalid') unless ignore_pos.is_a?(Integer)
+    raise(ArgumentError, 'symbols_to_ignore invalid') unless symbols_to_ignore.is_a?(Array)
+
     return false if symbols_to_ignore.include?(element)
     codes.each_with_index do |code_element, key|
       next if key == ignore_pos
@@ -69,6 +76,10 @@ class Logic
 
   # check if its a black one and remove from the collection
   def is_black?(codes, element, own_pos)
+    raise(ArgumentError, 'codes is not an array') unless codes.is_a?(Array)
+    raise(ArgumentError, 'element invalid') unless @match.class::SYMBOLS.include?(element)
+    raise(ArgumentError, 'own_pos invalid') unless own_pos.is_a?(Integer)
+
     if element == codes[own_pos]
       codes[own_pos] = nil
       @blacks += 1

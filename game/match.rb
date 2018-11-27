@@ -16,6 +16,9 @@ class Match
   attr_reader(:code, :guess_results, :players)
 
   def initialize(renderer, input)
+    raise(ArgumentError, 'renderer invalid') unless renderer.is_a? Renderer
+    raise(ArgumentError, 'input invalid') unless input.is_a? Input
+
     @players = {APlayer::CODE_MAKER => nil, APlayer::CODE_BREAKER => nil}
     @renderer = renderer
     @input = input
@@ -30,13 +33,13 @@ class Match
 
   def choose_code_maker
     @renderer.draw_choose_code_maker
-    @players[APlayer::CODE_MAKER] = get_player
+    @players[APlayer::CODE_MAKER] = get_player(APlayer::CODE_MAKER)
     self
   end
 
   def choose_code_breaker
     @renderer.draw_choose_code_breaker
-    @players[APlayer::CODE_BREAKER] = get_player
+    @players[APlayer::CODE_BREAKER] = get_player(APlayer::CODE_BREAKER)
     self
   end
 
@@ -53,6 +56,7 @@ class Match
     match_finished = false
 
     @code = @players[APlayer::CODE_MAKER].get_code
+    @players[APlayer::CODE_BREAKER].new_round
 
     begin
       next_round
@@ -70,12 +74,15 @@ class Match
     @logic.analyze_guess(guess)
     @guess_results.push({:guess => guess, :whites => @logic.whites, :blacks => @logic.blacks, :guesses => guess_no})
     @players[APlayer::CODE_BREAKER].increase_won_times if @logic.guess_correct?
+    @players[APlayer::CODE_BREAKER].analyse_last_guess(guess, @logic.whites, @logic.blacks)
     nil
   end
 
-  def get_player
+  def get_player(type)
+    raise(ArgumentError, 'type is not valid') unless (type == APlayer::CODE_MAKER || type == APlayer::CODE_BREAKER)
+
     player_type_chosen = @input.get_player_type
-    player_type_chosen == 0 ? Human.new(@input, @renderer, self) : Artifactual.new(@input, @renderer, self)
+    player_type_chosen == 0 ? Human.new(type, @input, @renderer, self) : Artifactual.new(type, @input, @renderer, self)
   end
 
   # tips just for humans
